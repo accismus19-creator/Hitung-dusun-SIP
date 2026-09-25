@@ -1,0 +1,318 @@
+‎<!DOCTYPE html>
+‎<html lang="id">
+‎<head>
+‎<meta charset="UTF-8">
+‎<meta name="viewport" content="width=device-width, initial-scale=1.0">
+‎
+‎<title>Penghitung Data Desa</title>
+‎
+‎<style>
+‎* {
+‎    box-sizing: border-box;
+‎}
+‎
+‎body {
+‎    font-family: Arial, sans-serif;
+‎    margin: 0;
+‎    padding: 15px;
+‎    background: #f3f4f6;
+‎}
+‎
+‎.container {
+‎    max-width: 700px;
+‎    margin: auto;
+‎}
+‎
+‎h2 {
+‎    text-align: center;
+‎    margin-bottom: 20px;
+‎}
+‎
+‎.kotak {
+‎    background: white;
+‎    padding: 15px;
+‎    border-radius: 12px;
+‎    margin-bottom: 15px;
+‎    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+‎}
+‎
+‎label {
+‎    font-weight: bold;
+‎    display: block;
+‎    margin-bottom: 8px;
+‎}
+‎
+‎input {
+‎    width: 100%;
+‎    padding: 14px;
+‎    font-size: 18px;
+‎    border: 1px solid #bbb;
+‎    border-radius: 8px;
+‎}
+‎
+‎textarea {
+‎    width: 100%;
+‎    min-height: 350px;
+‎    padding: 12px;
+‎    font-size: 16px;
+‎    border: 1px solid #bbb;
+‎    border-radius: 8px;
+‎    font-family: Arial, sans-serif;
+‎}
+‎
+‎.hasil {
+‎    display: grid;
+‎    grid-template-columns: 1fr 1fr;
+‎    gap: 10px;
+‎}
+‎
+‎.desa {
+‎    background: #f8fafc;
+‎    padding: 12px;
+‎    border-radius: 8px;
+‎    border: 1px solid #ddd;
+‎}
+‎
+‎.nama-desa {
+‎    font-weight: bold;
+‎}
+‎
+‎.jumlah {
+‎    font-size: 28px;
+‎    font-weight: bold;
+‎    margin-top: 5px;
+‎}
+‎
+‎.luar {
+‎    background: #fff7ed;
+‎    border-color: #f97316;
+‎}
+‎
+‎.total {
+‎    font-size: 32px;
+‎    font-weight: bold;
+‎}
+‎
+‎.daftar {
+‎    max-height: 250px;
+‎    overflow-y: auto;
+‎}
+‎
+‎.item {
+‎    padding: 8px;
+‎    border-bottom: 1px solid #ddd;
+‎}
+‎
+‎.keterangan {
+‎    font-size: 14px;
+‎    color: #666;
+‎    margin-top: 8px;
+‎}
+‎
+‎button {
+‎    width: 100%;
+‎    padding: 13px;
+‎    border: none;
+‎    border-radius: 8px;
+‎    font-size: 16px;
+‎    margin-top: 10px;
+‎    cursor: pointer;
+‎}
+‎
+‎.reset {
+‎    background: #e5e7eb;
+‎}
+‎
+‎.edit {
+‎    background: #e5e7eb;
+‎}
+‎
+‎.simpan {
+‎    background: #e5e7eb;
+‎}
+‎
+‎#editor {
+‎    display: none;
+‎}
+‎</style>
+‎</head>
+‎
+‎<body>
+‎
+‎<div class="container">
+‎
+‎<h2>📊 Penghitung Data Desa</h2>
+‎
+‎
+‎<!-- INPUT -->
+‎
+‎<div class="kotak">
+‎
+‎<label>Masukkan Nama Dusun</label>
+‎
+‎<input
+‎    type="text"
+‎    id="inputDusun"
+‎    placeholder="Ketik dusun lalu tekan ENTER"
+‎    autocomplete="off"
+‎>
+‎
+‎<div class="keterangan">
+‎Ketik nama dusun lalu tekan ENTER.
+‎Jika tidak ditemukan, otomatis masuk LUAR WILAYAH.
+‎</div>
+‎
+‎</div>
+‎
+‎
+‎<!-- HASIL -->
+‎
+‎<div class="kotak">
+‎
+‎<h3>Hasil Perhitungan Desa</h3>
+‎
+‎<div id="hasil" class="hasil"></div>
+‎
+‎<h3>Total Semua Data</h3>
+‎
+‎<div id="total" class="total">0</div>
+‎
+‎</div>
+‎
+‎
+‎<!-- DATA YANG SUDAH DIMASUKKAN -->
+‎
+‎<div class="kotak">
+‎
+‎<h3>Data yang Sudah Dimasukkan</h3>
+‎
+‎<div id="daftar" class="daftar"></div>
+‎
+‎<button class="reset" onclick="resetData()">
+‎🔄 RESET DATA
+‎</button>
+‎
+‎</div>
+‎
+‎
+‎<!-- EDIT DATA DUSUN -->
+‎
+‎<div class="kotak">
+‎
+‎<button class="edit" onclick="bukaEditor()">
+‎⚙️ EDIT DATA DUSUN
+‎</button>
+‎
+‎<div id="editor">
+‎
+‎<h3>Edit Daftar Dusun</h3>
+‎
+‎<textarea id="teksDusun"></textarea>
+‎
+‎<div class="keterangan">
+‎Format: satu desa menggunakan judul, lalu nama dusun satu per baris.
+‎Anda boleh memperbaiki typo atau menambahkan dusun.
+‎</div>
+‎
+‎<button class="simpan" onclick="simpanDusun()">
+‎💾 SIMPAN DATA DUSUN
+‎</button>
+‎
+‎</div>
+‎
+‎</div>
+‎
+‎</div>
+‎
+‎
+‎<script>
+‎
+‎/* =====================================
+‎   DATA DESA DAN DUSUN AWAL
+‎===================================== */
+‎
+‎const dataAwal = {
+‎
+‎    "Lanrisang": [
+‎        "kessie",
+‎        "jampue",
+‎        "lanrisang",
+‎        "sumpag saddang"
+‎    ],
+‎
+‎    "Lerang": [
+‎        "kaloang",
+‎        "lerang",
+‎        "abbanuang",
+‎        "baranae"
+‎    ],
+‎
+‎    "Mallongi-longi": [
+‎        "ujung",
+‎        "mallongi-longi",
+‎        "paladang",
+‎        "kanarie"
+‎    ],
+‎
+‎    "Samaulue": [
+‎        "padang lampe",
+‎        "samaulue",
+‎        "ulo"
+‎    ],
+‎
+‎    "Amassangang": [
+‎        "labalakang",
+‎        "amassangang",
+‎        "sipurennu",
+‎        "bonto pucu"
+‎    ],
+‎
+‎    "Waetuoe": [
+‎        "waetuoe",
+‎        "soroe",
+‎        "kamp baru"
+‎    ],
+‎
+‎    "Barang Palie": [
+‎        "kampung coka",
+‎        "barangpalie",
+‎        "ujung baru"
+‎    ]
+‎
+‎};
+‎
+‎
+‎/* =====================================
+‎   AMBIL DATA YANG TERSIMPAN
+‎===================================== */
+‎
+‎let dataDesa =
+‎    JSON.parse(localStorage.getItem("dataDesaDusun"))
+‎    || dataAwal;
+‎
+‎
+‎/* =====================================
+‎   DATA YANG MASUK
+‎===================================== */
+‎
+‎let dataMasuk = [];
+‎
+‎
+‎/* =====================================
+‎   INPUT DENGAN ENTER
+‎===================================== */
+‎
+‎document.getElementById("inputDusun")
+‎.addEventListener("keydown", function(event) {
+‎
+‎    if (event.key === "Enter") {
+‎
+‎        event.preventDefault();
+‎
+‎        let dusun = this.value.trim();
+‎
+‎        if (dusun === "") {
+‎            return;
+‎        }
+‎
+‎
